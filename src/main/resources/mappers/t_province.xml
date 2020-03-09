@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jeesite.modules.msg.dao.MsgInnerDao">
+    <resultMap id="provinceResultMap" type="com.example.entity.Province">
+
+        <result property="provName" column="PROV_NAME"/>
+        <result property="bb" column="BB"/>
+        <result property="by1" column="BY1"/>
+        <result property="by2" column="BY2"/>
+        <result property="drsj" column="DRSJ"/>
+        <result property="gxsj" column="GXSJ"/>
+        <result property="czr" column="CZR"/>
+
+    </resultMap>
+    <select id="read" resultMap="provinceResultMap">
+        SELECT
+            *
+        FROM T_PROVINCE
+
+    </select>
+
+</mapper>
