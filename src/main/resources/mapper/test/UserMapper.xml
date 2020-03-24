@@ -5,20 +5,61 @@
 
 	<resultMap type="UserBean" id="user">
 		<id property="id" column="id" />
-		<result property="name" column="u_name" javaType="String" />
-		<result property="sex" column="u_sex" javaType="String" />
-		<result property="age" column="u_age" javaType="java.lang.Long" />
+		<result property="name" column="name" javaType="String" />
+		<result property="sex" column="sex" javaType="String" />
+		<result property="age" column="age" javaType="java.lang.Long" />
 	</resultMap>
-
+	<!-- 根据名字查询 -->
 	<select id="selectUserByName" resultMap="user" parameterType="UserBean">
-		select t.id,t.u_name,t.u_sex,t.u_age from t_user t where t.u_name = #{name}
+		select t.id,t.name,t.sex,t.age from t_user t where t.name = #{name}
 	</select>
 
+	<!-- 锁住单条语句，若要锁住全表，不加条件就是 -->
+	<select id="forupdateUser" resultMap="user" parameterType="UserBean">
+		select * from t_user
+		<where>
+			<if test="user.id != null">
+				and user.id = #{user.id}
+			</if>
+			<if test="user.name != null">
+				and user.name = #{user.name}
+			</if>
+			<if test="user.age != null">
+				and user.sex = #{user.sex}
+			</if>
+			<if test="user.age != null">
+				and user.age = #{user.age}
+			</if>
+		</where>
+		for update
+	</select>
+
+	<!-- 锁住整个表 -->
+	<select id="forupdateTable" resultMap="user" parameterType="String">
+		select * from ${tableName} for update
+	</select>
+
+
+	<!-- 添加用户 -->
 	<insert id="addUser" parameterType="UserBean">
-		insert into t_user (u_name,u_sex,u_age) values (#{user.name},#{user.sex},#{user.age})
+		insert into t_user (name,sex,age) values (#{user.name},#{user.sex},#{user.age})
 	</insert>
+
+	<!-- 更新用户 -->
 	<update id="updateUser" parameterType="UserBean">
-		update t_user set u_age =#{user.age} where id=#{user.id}
+		update t_user set
+		<trim prefix="set" suffixOverrides=",">
+			<if test="user.name != null">
+				user.name = #{user.name},
+			</if>
+			<if test="user.sex != null">
+				user.sex = #{user.sex},
+			</if>
+			<if test="user.age != null">
+				user.age = #{user.age},
+			</if>
+		</trim>
+		WHERE id=#{id}
 	</update>
 	<select id="selectTestList" resultMap="user" >
 			select t.id,t.u_name,t.u_sex,t.u_age from t_test t
